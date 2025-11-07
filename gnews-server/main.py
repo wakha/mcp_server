@@ -22,7 +22,11 @@ from enum import Enum
 import httpx
 from pydantic import BaseModel, Field, validator
 from mcp.server.fastmcp import FastMCP
+from dotenv import load_dotenv
 
+
+# Load environment variables from .env file
+load_dotenv()
 
 # Configure logging for STDIO transport (writes to stderr)
 logging.basicConfig(
@@ -35,7 +39,9 @@ logger = logging.getLogger(__name__)
 # Create FastMCP server
 mcp = FastMCP(
     name="gnews-server",
-    instructions="A Model Context Protocol server for accessing GNews API. Provides tools to search news articles and get top headlines."
+    instructions="A Model Context Protocol server for accessing GNews API. Provides tools to search news articles and get top headlines.",
+    #port=8000,
+    host="localhost"
 )
 
 # Supported languages and countries (from GNews API documentation)
@@ -306,8 +312,8 @@ def main():
         print(f"Error: {e}", file=os.sys.stderr)
         return
     
-    # Run the server using stdio transport
-    mcp.run(transport="stdio")
+    # Run the server using streamable-http transport
+    mcp.run(transport="streamable-http") #Use 'stdio' for local testing
 
 
 if __name__ == "__main__":
